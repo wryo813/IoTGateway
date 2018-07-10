@@ -15,12 +15,8 @@ def on_message(client, userdata, msg):
     print(msg.topic + ' ' + str(msg.payload))
 
 if __name__ == '__main__':
-
     client = mqtt.Client(protocol=mqtt.MQTTv311)
-
     client.on_connect = on_connect
     client.on_message = on_message
-
     client.connect(host, port=port, keepalive=60)
-
     client.loop_forever()
