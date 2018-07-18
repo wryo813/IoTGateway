@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import  sys
-from time import sleep
-import paho.mqtt.client as mqtt
 from flask import Flask, request
 import re
 
@@ -15,12 +13,8 @@ port = 1883
 
 @app.route("/")
 def hello():
-    return "Now Running"
-
-@app.route("/", methods=['POST'])
-def webhook():
-
-    str = request.data
+    file = open('str.txt', 'r')
+    str = file.read()
 
     a = 't:'
     b = 'm:'
@@ -28,19 +22,14 @@ def webhook():
 
     topicData = re.search(r'%s(.*?)%s'%(a,x), str)
     bodyData = re.search(r'%s(.*?)%s'%(b,x), str)
-    
     topic = topicData.group(1)
     body = bodyData.group(1)
+    print(str)
+    print('OutTopic={0}'.format(topic))
+    print('OutBody={0}'.format(body))
+    
+    return str
 
-    client = mqtt.Client(protocol=mqtt.MQTTv311)
-    client.connect(host, port=port, keepalive=60)
-
-    client.publish(topic, body)
-
-    print('InTopic={0}'.format(topic))
-    print('InBody={0}'.format(body))
-
-    return 'OK'
 
 if __name__ == "__main__":
     app.run(debug=False, host=host, port=80)
